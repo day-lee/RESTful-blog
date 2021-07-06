@@ -214,4 +214,5 @@ secret_key.txt
 .idea/
 posts.db
 
+
 # End of https://www.toptal.com/developers/gitignore/api/flask,python
