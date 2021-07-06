@@ -6,8 +6,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
 import os
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -36,7 +38,10 @@ class CreatePostForm(FlaskForm):
     body = StringField("Blog Content", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
 
+#Line below only required once, when creating DB.
+db.create_all()
 
+'''
 @app.route('/')
 def get_all_posts():
     return render_template("index.html", all_posts=posts)
@@ -59,7 +64,7 @@ def about():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
-
+'''
 if __name__ == "__main__":
     app.run(debug=True)
     # app.run(host='0.0.0.0', port=5000)
