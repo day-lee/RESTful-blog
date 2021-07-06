@@ -39,9 +39,11 @@ class CreatePostForm(FlaskForm):
     submit = SubmitField("Submit Post")
 
 #Line below only required once, when creating DB.
-db.create_all()
+# db.create_all()
 
-'''
+#Fetch objects from database
+posts = db.session.query(BlogPost).all()
+
 @app.route('/')
 def get_all_posts():
     return render_template("index.html", all_posts=posts)
@@ -64,7 +66,7 @@ def about():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
-'''
+
 if __name__ == "__main__":
     app.run(debug=True)
     # app.run(host='0.0.0.0', port=5000)
