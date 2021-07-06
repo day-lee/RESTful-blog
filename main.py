@@ -41,22 +41,28 @@ class CreatePostForm(FlaskForm):
 #Line below only required once, when creating DB.
 # db.create_all()
 
-#Fetch objects from database
-posts = db.session.query(BlogPost).all()
+
+
 
 @app.route('/')
 def get_all_posts():
+    # Fetch objects from database
+    posts = db.session.query(BlogPost).all()
     return render_template("index.html", all_posts=posts)
 
 
 @app.route("/post/<int:index>")
 def show_post(index):
-    requested_post = None
-    for blog_post in posts:
-        if blog_post["id"] == index:
-            requested_post = blog_post
+    requested_post = BlogPost.query.get(index)
+    # for blog_post in posts:
+    #     if blog_post["id"] == index:
+    #         requested_post = blog_post
     return render_template("post.html", post=requested_post)
 
+#dummy route for silencing url on post.html
+@app.route("/edit_post")
+def edit_post():
+    pass
 
 @app.route("/about")
 def about():
