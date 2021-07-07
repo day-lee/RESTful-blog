@@ -10,7 +10,8 @@ from datetime import date
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['SECRET_KEY'] = os.environ.get("RESTBLOG_SECRET_KEY")
+
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
