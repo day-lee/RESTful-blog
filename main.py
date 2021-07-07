@@ -75,6 +75,7 @@ def new_post():
     return render_template("make-post.html", form=form, is_edit=False)
 
 #dummy route for silencing url on post.html
+
 @app.route("/edit_post/<post_id>", methods=["GET", "POST"])
 def edit_post(post_id):
     post_to_edit = BlogPost.query.get(post_id)
@@ -98,6 +99,12 @@ def edit_post(post_id):
     #POST: fetch post to edit
     return render_template("make-post.html", form=edit_form, is_edit=True)
 
+@app.route("/delete/<post_id>")
+def delete_post(post_id):
+    post_to_delete = db.session.query(BlogPost).get(post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for("get_all_posts"))
 
 @app.route("/about")
 def about():
