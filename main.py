@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -72,12 +72,32 @@ def new_post():
         db.session.commit()
         return redirect(url_for("get_all_posts"))
     # POST
-    return render_template("make-post.html", form=form)
+    return render_template("make-post.html", form=form, is_edit=False)
 
 #dummy route for silencing url on post.html
-@app.route("/edit_post")
-def edit_post():
-    pass
+@app.route("/edit_post/<post_id>", methods=["GET", "POST"])
+def edit_post(post_id):
+    post_to_edit = BlogPost.query.get(post_id)
+    edit_form = CreatePostForm(
+        title=post_to_edit.title,
+        subtitle=post_to_edit.subtitle,
+        img_url=post_to_edit.img_url,
+        author=post_to_edit.author,
+        body=post_to_edit.body
+    )
+    #GET: save changes in edited post
+    if edit_form.validate_on_submit(): #request.method == "GET":
+        post_to_edit.title = edit_form.title.data
+        post_to_edit.subtitle = edit_form.subtitle.data
+        post_to_edit.body = edit_form.body.data
+        post_to_edit.img_url = edit_form.img_url.data
+        post_to_edit.author = edit_form.author.data
+        post_to_edit.date = post_to_edit.date
+        db.session.commit()
+        return redirect(url_for("show_post", index=post_id))
+    #POST: fetch post to edit
+    return render_template("make-post.html", form=edit_form, is_edit=True)
+
 
 @app.route("/about")
 def about():
